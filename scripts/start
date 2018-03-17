@@ -1,0 +1,4 @@
+#!/bin/bash
+root=$(git rev-parse --show-toplevel)
+cd "${root}"
+node index.js

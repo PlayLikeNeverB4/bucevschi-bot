@@ -1,0 +1,1 @@
+heroku pg:push bucevschibot postgresql-opaque-18112 --app bucevschi-bot

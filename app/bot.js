@@ -4,7 +4,7 @@ const request = require('request'),
       config = require('config'),
       botLogic = require('./bot_logic');
 
-const PAGE_ACCESS_TOKEN = config.get('pageAccessToken');
+const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN || config.get('pageAccessToken');
 
 
 // Sends response messages via the Send API

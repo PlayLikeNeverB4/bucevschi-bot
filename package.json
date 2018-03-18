@@ -24,6 +24,7 @@
     "request": "^2.85.0"
   },
   "scripts": {
-    "start": "scripts/start"
+    "start": "scripts/start",
+    "dev": "scripts/start-dev"
   }
 }

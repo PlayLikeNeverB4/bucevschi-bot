@@ -37,28 +37,27 @@ const callSendAPI = (senderPSID, response) => {
 const bot = {
   // Handles messages events
   handleMessage: (senderPSID, receivedMessage) => {
-    let response;
-
     // Check if the message contains text
     if (receivedMessage.text) {
-      const responseText = botLogic.getResponse(receivedMessage.text);
-      response = {
-        "text": responseText,
-      };
+      botLogic.getResponse(receivedMessage.text, senderPSID).then((responseText) => {
+        const response = {
+          "text": responseText,
+        };
+        callSendAPI(senderPSID, response);
+      });
+    } else {
+      callSendAPI(senderPSID, null);
     }
-
-    callSendAPI(senderPSID, response);
   },
 
   // Handles messaging_postbacks events
   handlePostback: (senderPSID, receivedPostback) => {
-    const payload = receivedPostback.payload;
-    const responseText = botLogic.getResponse(payload);
-    const response = {
-      "text": responseText,
-    };
-
-    callSendAPI(senderPSID, response);
+    botLogic.getResponse(receivedPostback.payload, senderPSID).then((responseText) => {
+      const response = {
+        "text": responseText,
+      };
+      callSendAPI(senderPSID, response);
+    });
   },
 };
 

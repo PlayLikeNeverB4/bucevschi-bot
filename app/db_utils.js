@@ -25,45 +25,45 @@ db.connect();
 
 const dbUtils = {
   subscribeUser: (psid) => {
-    // client.query('INSERT INTO items(text, complete) values($1, $2)',
-    //     [data.text, data.complete]);
-
+    return new Promise((resolve, reject) => {
+      db.query('INSERT INTO subscribers(psid) values($1)', [ psid ], (error, result) => {
+        if (error) {
+          if (error.detail.indexOf('already exists') != -1) {
+            resolve('duplicate');
+          } else {
+            resolve('error');
+          }
+        } else {
+          resolve('ok');
+        }
+      });
+    });
   },
 
   unsubscribeUser: (psid) => {
-    // client.query('DELETE FROM items WHERE id=($1)', [id]);
-    // // SQL Query > Select Data
-    // var query = client.query('SELECT * FROM items ORDER BY id ASC');
-    // // Stream results back one row at a time
-    // query.on('row', (row) => {
-    //   results.push(row);
-    // });
-    // // After all data is returned, close connection and return results
-    // query.on('end', () => {
-    //   done();
-    //   return res.json(results);
-    // });
+    return new Promise((resolve, reject) => {
+      db.query('DELETE FROM subscribers WHERE psid = ($1)', [ psid ], (error, result) => {
+        if (error) {
+          resolve('error');
+        } else if (result.rowCount === 0) {
+          resolve('not_found');
+        } else {
+          resolve('ok');
+        }
+      });
+    });
   },
 
   getSubscribers: () => {
-    // const query = client.query('SELECT * FROM items ORDER BY id ASC');
-    // // Stream results back one row at a time
-    // query.on('row', (row) => {
-    //   results.push(row);
-    // });
-    // // After all data is returned, close connection and return results
-    // query.on('end', () => {
-    //   done();
-    //   return res.json(results);
-    // });
-
-    // db.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-    //   if (err) throw err;
-    //   for (let row of res.rows) {
-    //     console.log(JSON.stringify(row));
-    //   }
-    //   db.end();
-    // });
+    return new Promise((resolve, reject) => {
+      db.query('SELECT * FROM subscribers', (err, res) => {
+        if (!err) {
+          resolve(res.rows);
+        } else {
+          resolve(false);
+        }
+      });
+    });
   },
 };
 

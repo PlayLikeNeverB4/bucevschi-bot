@@ -7,8 +7,12 @@ const
   config = require('config'),
   app = express().use(bodyParser.json()); // creates express http server
 
-const dbUtils = require('./app/db_utils'),
-      bot = require('./app/bot');
+const moment = require('moment'),
+      dbUtils = require('./app/db_utils'),
+      bot = require('./app/bot'),
+      contestsChecker = require('./app/contests_checker');
+
+moment.tz.setDefault('UTC');
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
@@ -71,3 +75,11 @@ app.get('/webhook', (req, res) => {
     }
   }
 });
+
+
+const CONTESTS_FETCH_INTERVAL = process.env.CONTESTS_FETCH_INTERVAL || config.get('contestsFetchInterval');
+
+contestsChecker.checkContestReminders();
+setInterval(() => {
+  contestsChecker.checkContestReminders();
+}, CONTESTS_FETCH_INTERVAL);

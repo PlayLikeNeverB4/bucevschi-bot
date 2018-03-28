@@ -48,6 +48,15 @@ const botLogic = {
       }
     });
   },
+
+  /* reminder = {
+   *   ...
+   * }
+   */
+  getReminderText: (reminder) => {
+    const timeString = reminder.type === 'hours' ? '2 ore' : '24 de ore';
+    return `Concursul ${ reminder.contestName } de pe Codeforces va avea loc in aproximativ ${ timeString }. http://codeforces.com/contests`;
+  },
 };
 
 module.exports = botLogic;

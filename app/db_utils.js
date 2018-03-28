@@ -2,6 +2,7 @@
 
 const config = require('config');
 const { Client } = require('pg');
+const _ = require('lodash');
 
 let db;
 
@@ -56,7 +57,36 @@ const dbUtils = {
 
   getSubscribers: () => {
     return new Promise((resolve, reject) => {
-      db.query('SELECT * FROM subscribers', (err, res) => {
+      db.query('SELECT psid FROM subscribers', (err, res) => {
+        if (!err) {
+          resolve(res.rows);
+        } else {
+          resolve(false);
+        }
+      });
+    });
+  },
+
+  saveReminders: (reminders) => {
+    reminders.forEach((reminder) => {
+      db.query("INSERT INTO reminders(contest_id, last_sent) \
+                VALUES ($1, NOW()) \
+                ON CONFLICT (contest_id) DO UPDATE \
+                SET last_sent = NOW()", [ reminder.contestId ], (err, res) => {
+        if (err) {
+          console.log("Error while saving reminders!");
+        }
+      });
+    });
+  },
+
+  getReminders: (contests) => {
+    return new Promise((resolve, reject) => {
+      const contestIds = contests.map((contest) => `CF${ contest.id }`);
+      const params = _.map(contestIds, (contestId, index) => `$${ index + 1 }`);
+      const paramsString = params.join(",");
+
+      db.query(`SELECT contest_id, last_sent FROM reminders WHERE contest_id IN (${ paramsString })`, contestIds, (err, res) => {
         if (!err) {
           resolve(res.rows);
         } else {

@@ -30,10 +30,12 @@ const callSendAPI = (senderPSID, response) => {
     } else {
       console.error("Unable to send message:" + err);
     }
-  }); 
+  });
 };
 
 
+// Handles API calls and data formatting
+// Acts as the middle man between the application and the bot logic
 const bot = {
   // Handles messages events
   handleMessage: (senderPSID, receivedMessage) => {
@@ -58,6 +60,21 @@ const bot = {
       };
       callSendAPI(senderPSID, response);
     });
+  },
+
+  sendMessage: (psid, text) => {
+    const message = {
+      "text": text,
+    };
+    callSendAPI(senderPSID, message);
+  },
+
+  sendContestReminder: (psid, reminder) => {
+    const text = botLogic.getReminderText(reminder);
+    const message = {
+      "text": text,
+    };
+    callSendAPI(psid, message);
   },
 };
 

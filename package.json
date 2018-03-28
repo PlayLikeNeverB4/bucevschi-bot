@@ -24,6 +24,7 @@
     "lodash": "^4.17.5",
     "moment-timezone": "^0.5.14",
     "pg": "^7.4.1",
-    "request": "^2.85.0"
+    "request": "^2.85.0",
+    "winston": "^2.4.1"
   }
 }

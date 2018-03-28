@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('lodash'),
+      logger = require("winston"),
       moment = require('moment'),
       timezone = require('moment-timezone'),
       request = require('request'),
@@ -26,10 +27,10 @@ const fetchContests = () => {
           });
           resolve(contests);
         } else {
-          console.error("API call returned with error!");
+          logger.error('API call returned with error!');
         }
       } else {
-        console.error("Unable to fetch contests: " + error);
+        logger.error("Unable to fetch contests: " + error);
       }
     }); 
   });
@@ -47,11 +48,11 @@ const getReminders = (contests) => {
   return new Promise((resolve, reject) => {
     const reminders = [];
 
-    console.log("Fetching previous reminders...");
+    logger.verbose('Fetching previous reminders...');
     dbUtils.getReminders(contests).then((previousReminders) => {
-      console.log(previousReminders);
+      logger.debug(previousReminders);
       const reminderTimestampByContestId = _.keyBy(previousReminders, 'contest_id');
-      console.log(reminderTimestampByContestId);
+      logger.debug(reminderTimestampByContestId);
 
       const now = moment();
       contests.forEach((contest) => {
@@ -89,31 +90,31 @@ const getReminders = (contests) => {
 
 const contestsChecker = {
   checkContestReminders: () => {
-    console.log("Checking for contests (API calls)...");
+    logger.info('Checking for contests...');
     fetchContests().then((contests) => {
-      console.log(`Got ${ contests.length } contests.`);
+      logger.verbose(`Got ${ contests.length } contests.`);
       contests = filterFutureContests(contests);
-      console.log(`Got ${ contests.length } future contests, checking dates...`);
-      // console.log(contests);
+      logger.verbose(`Got ${ contests.length } future contests, checking dates...`);
+      logger.debug(contests);
       getReminders(contests).then((reminders) => {
-        console.log(`Found ${ reminders.length } contests to send reminders for.`);
-        console.log(reminders);
+        logger.info(`Found ${ reminders.length } contests to send reminders for.`);
+        logger.verbose(reminders);
         if (reminders.length > 0) {
-          console.log("Fetching subscribers...");
+          logger.verbose('Fetching subscribers...');
           dbUtils.getSubscribers().then((subscribers) => {
-            console.log(`Found ${ subscribers.length } subscribers.`);
+            logger.verbose(`Found ${ subscribers.length } subscribers.`);
+            logger.debug(subscribers);
             if (subscribers.length > 0) {
-              console.log(subscribers);
-              console.log("Sending reminders...");
+              logger.verbose('Sending reminders...');
               reminders.forEach((reminder) => {
                 subscribers.forEach((subscriber) => {
                   bot.sendContestReminder(subscriber.psid, reminder);
                 })
               });
-              console.log("Finished sending reminders.");
+              logger.verbose('Finished sending reminders.');
             }
           });
-          console.log("Saving reminders...");
+          logger.verbose('Saving reminders...');
           dbUtils.saveReminders(reminders);
         }
       });

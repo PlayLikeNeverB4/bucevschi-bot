@@ -1,8 +1,9 @@
 'use strict';
 
-const config = require('config');
 const { Client } = require('pg');
-const _ = require('lodash');
+const config = require('config'),
+      _ = require('lodash'),
+      logger = require("winston");
 
 let db;
 
@@ -74,7 +75,7 @@ const dbUtils = {
                 ON CONFLICT (contest_id) DO UPDATE \
                 SET last_sent = NOW()", [ reminder.contestId ], (err, res) => {
         if (err) {
-          console.log("Error while saving reminders!");
+          logger.error('Error while saving reminders!');
         }
       });
     });

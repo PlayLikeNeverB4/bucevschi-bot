@@ -1,21 +1,28 @@
 'use strict';
 
-// Imports dependencies and set up http server
-const
-  express = require('express'),
-  bodyParser = require('body-parser'),
-  config = require('config'),
-  app = express().use(bodyParser.json()); // creates express http server
+const express = require('express'),
+      bodyParser = require('body-parser'),
+      config = require('config'),
+      app = express().use(bodyParser.json());
 
 const moment = require('moment'),
+      logger = require("winston"),
       dbUtils = require('./app/db_utils'),
       bot = require('./app/bot'),
       contestsChecker = require('./app/contests_checker');
 
+// Logging levels: error, warn, info, verbose, debug, silly
+const LOGGER_LEVEL = process.env.LOGGER_LEVEL || config.get('loggerLevel');
+logger.remove(logger.transports.Console);
+logger.add(logger.transports.Console, {
+  "timestamp": true,
+  "level": LOGGER_LEVEL,
+});
+
 moment.tz.setDefault('UTC');
 
 // Sets server port and logs message on success
-app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
+app.listen(process.env.PORT || 1337, () => logger.info('Webhook is listening...'));
 
 
 // Creates the endpoint for our webhook 
@@ -29,8 +36,8 @@ app.post('/webhook', (req, res) => {
       // Gets the message. entry.messaging is an array, but 
       // will only ever contain one message, so we get index 0
       const webhookEvent = entry.messaging[0];
-      console.log("Received webhook event!");
-      console.log(webhookEvent);
+      logger.info('Received webhook event!');
+      logger.verbose(webhookEvent);
 
       // Get the sender PSID
       const senderPSID = webhookEvent.sender.id;
@@ -67,7 +74,7 @@ app.get('/webhook', (req, res) => {
     // Checks the mode and token sent is correct
     if (mode === 'subscribe' && token === VERIFY_TOKEN) {
       // Responds with the challenge token from the request
-      console.log('Webhook verified!');
+      logger.info('Webhook verified!');
       res.status(200).send(challenge);
     } else {
       // Responds with '403 Forbidden' if verify tokens do not match

@@ -2,6 +2,7 @@
 
 const request = require('request'),
       config = require('config'),
+      logger = require("winston"),
       botLogic = require('./bot_logic');
 
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN || config.get('pageAccessToken');
@@ -25,10 +26,10 @@ const callSendAPI = (senderPSID, response) => {
     "json": requestBody
   }, (err, res, body) => {
     if (!err) {
-      console.log('Message sent!');
-      console.log(requestBody);
+      logger.verbose('Message sent!');
+      logger.debug(requestBody);
     } else {
-      console.error("Unable to send message:" + err);
+      logger.error('Unable to send message: ' + err);
     }
   });
 };

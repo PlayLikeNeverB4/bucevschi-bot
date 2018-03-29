@@ -3,7 +3,8 @@
 const express = require('express'),
       bodyParser = require('body-parser'),
       config = require('config'),
-      app = express().use(bodyParser.json());
+      app = express().use(bodyParser.json()),
+      path = require('path');
 
 const moment = require('moment'),
       logger = require("winston"),
@@ -82,6 +83,18 @@ app.get('/webhook', (req, res) => {
     }
   }
 });
+
+app.get('/', (req, res) => {
+  dbUtils.getSubscribers().then((subscribers) => {
+    res.render('index', {
+      subscribersCount: subscribers.length,
+    });
+  });
+});
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine','ejs');
+app.engine('html', require('ejs').renderFile);
 
 
 const CONTESTS_FETCH_INTERVAL = process.env.CONTESTS_FETCH_INTERVAL || config.get('contestsFetchInterval');

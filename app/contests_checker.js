@@ -67,17 +67,12 @@ const getReminders = (contests) => {
         }
         const currentDaysToContest = moment(contest.startTimeSeconds * 1000).diff(now, 'days', true);
 
-        if (reminderDaysToContest > TWO_HOURS_IN_DAYS && currentDaysToContest <= TWO_HOURS_IN_DAYS) {
+        if (reminderDaysToContest > TWO_HOURS_IN_DAYS && currentDaysToContest <= TWO_HOURS_IN_DAYS ||
+            reminderDaysToContest > 1 && currentDaysToContest <= 1) {
           reminders.push({
-            type: 'hours',
             contestId: contestId,
             contestName: contest.name,
-          });
-        } else if (reminderDaysToContest > 1 && currentDaysToContest <= 1) {
-          reminders.push({
-            type: 'day',
-            contestId: contestId,
-            contestName: contest.name,
+            contestStartTime: contest.startTimeSeconds,
           });
         }
       });

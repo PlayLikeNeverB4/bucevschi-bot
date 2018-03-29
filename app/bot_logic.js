@@ -1,6 +1,8 @@
 'use strict';
 
-const dbUtils = require('./db_utils');
+const _ = require('lodash'),
+      moment = require('moment'),
+      dbUtils = require('./db_utils');
 
 const isSubscribeMessage = (text) => {
   return text === 'subscribe' ||
@@ -54,7 +56,15 @@ const botLogic = {
    * }
    */
   getReminderText: (reminder) => {
-    const timeString = reminder.type === 'hours' ? '2 ore' : '24 de ore';
+    const hoursLeft = _.ceil(moment(reminder.contestStartTime * 1000).diff(moment(), 'hours', true));
+
+    let timeString = hoursLeft;
+    // we assume hoursLeft < 100
+    if (hoursLeft >= 20) {
+      timeString += ' de';
+    }
+    timeString += ' ore';
+
     return `Concursul ${ reminder.contestName } de pe Codeforces va avea loc in aproximativ ${ timeString }. http://codeforces.com/contests`;
   },
 };

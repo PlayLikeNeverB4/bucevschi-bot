@@ -20,6 +20,11 @@ logger.add(logger.transports.Console, {
   "level": LOGGER_LEVEL,
 });
 
+if (process.env.NODE_ENV === 'production') {
+  logger.info('Setting up New Relic.');
+  require('newrelic');
+}
+
 moment.tz.setDefault('UTC');
 
 // Sets server port and logs message on success

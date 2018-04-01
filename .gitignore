@@ -3,3 +3,4 @@ config/default.json
 config/development.json
 npm-debug.log
 scripts/fb_scripts
+newrelic_agent.log

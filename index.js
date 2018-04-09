@@ -25,6 +25,7 @@ if (process.env.NODE_ENV === 'production') {
   require('newrelic');
 }
 
+moment.locale('ro');
 moment.tz.setDefault('UTC');
 
 // Sets server port and logs message on success

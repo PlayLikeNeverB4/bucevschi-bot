@@ -4,44 +4,13 @@ const _ = require('lodash'),
       logger = require("winston"),
       moment = require('moment'),
       timezone = require('moment-timezone'),
-      request = require('request'),
       config = require('config'),
       bot = require('./bot'),
-      dbUtils = require('./db_utils');
+      dbUtils = require('./db_utils'),
+      codeforcesAPI = require('./codeforces_api');
 
 const TWO_HOURS_IN_DAYS = 1.0 / 12;
 
-
-// Calls API to get contests
-const fetchContests = () => {
-  return new Promise((resolve, reject) => {
-    request({
-      "uri": "http://codeforces.com/api/contest.list",
-      "method": "GET"
-    }, (error, result, body) => {
-      if (!error) {
-        const response = JSON.parse(result.body);
-        if (response.status === 'OK') {
-          const contests = response.result.map((contest) => {
-            return _.pick(contest, [ 'id', 'name', 'startTimeSeconds' ]);
-          });
-          resolve(contests);
-        } else {
-          logger.error('API call returned with error!');
-        }
-      } else {
-        logger.error("Unable to fetch contests: " + error);
-      }
-    }); 
-  });
-};
-
-const filterFutureContests = (contests) => {
-  const now = moment().unix();
-  return _.filter(contests, (contest) => {
-    return contest.startTimeSeconds && contest.startTimeSeconds >= now;
-  });
-};
 
 // Checks which contests we didn't send reminders for
 const getReminders = (contests) => {
@@ -86,9 +55,7 @@ const getReminders = (contests) => {
 const contestsChecker = {
   checkContestReminders: () => {
     logger.info('Checking for contests...');
-    fetchContests().then((contests) => {
-      logger.verbose(`Got ${ contests.length } contests.`);
-      contests = filterFutureContests(contests);
+    codeforcesAPI.fetchFutureContests().then((contests) => {
       logger.verbose(`Got ${ contests.length } future contests, checking dates...`);
       logger.debug(contests);
       getReminders(contests).then((reminders) => {
@@ -103,6 +70,8 @@ const contestsChecker = {
               logger.verbose('Sending reminders...');
               reminders.forEach((reminder) => {
                 subscribers.forEach((subscriber) => {
+                  // console.log(bot);
+                  // console.log(bot.sendContestReminder);
                   bot.sendContestReminder(subscriber.psid, reminder);
                 })
               });
@@ -114,7 +83,7 @@ const contestsChecker = {
         }
       });
     });
-  }
+  },
 };
 
 module.exports = contestsChecker;

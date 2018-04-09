@@ -5,7 +5,6 @@ const request = require('request'),
       moment = require('moment');
 
 
-// Calls API to get contests
 const fetchContests = () => {
   return new Promise((resolve, reject) => {
     request({
@@ -39,6 +38,9 @@ const filterFutureContests = (contests) => {
 
 
 const codeforcesAPI = {
+  /*
+   * Calls Codeforces API and select future contests.
+   */
   fetchFutureContests: () => {
     return new Promise((resolve, reject) => {
       fetchContests().then((contests) => {

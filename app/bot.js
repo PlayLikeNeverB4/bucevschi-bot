@@ -8,7 +8,9 @@ const request = require('request'),
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN || config.get('pageAccessToken');
 
 
-// Sends response messages via the Send API
+/*
+ * Sends message via the Send API.
+ */
 const callSendAPI = (senderPSID, response) => {
   // Construct the message body
   const requestBody = {
@@ -38,7 +40,9 @@ const callSendAPI = (senderPSID, response) => {
 // Handles API calls and data formatting
 // Acts as the middle man between the application and the bot logic
 const bot = {
-  // Handles messages events
+  /*
+   * Handles messages events.
+   */
   handleMessage: (senderPSID, receivedMessage) => {
     // Check if the message contains text
     if (receivedMessage.text) {
@@ -53,7 +57,9 @@ const bot = {
     }
   },
 
-  // Handles messaging_postbacks events
+  /*
+   * Handles messaging_postbacks events.
+   */
   handlePostback: (senderPSID, receivedPostback) => {
     botLogic.getResponse(receivedPostback.payload, senderPSID).then((responseText) => {
       const response = {
@@ -63,6 +69,9 @@ const bot = {
     });
   },
 
+  /*
+   * Sends message to user.
+   */
   sendMessage: (psid, text) => {
     const message = {
       "text": text,
@@ -70,6 +79,9 @@ const bot = {
     callSendAPI(senderPSID, message);
   },
 
+  /*
+   * Sends contest reminder to user.
+   */
   sendContestReminder: (psid, reminder) => {
     const text = botLogic.getReminderText(reminder);
     const message = {

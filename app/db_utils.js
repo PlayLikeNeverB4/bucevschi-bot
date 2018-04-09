@@ -26,6 +26,9 @@ db.connect();
 
 
 const dbUtils = {
+  /*
+   * Adds user to subscribers list.
+   */
   subscribeUser: (psid) => {
     return new Promise((resolve, reject) => {
       db.query('INSERT INTO subscribers(psid) values($1)', [ psid ], (error, result) => {
@@ -42,6 +45,9 @@ const dbUtils = {
     });
   },
 
+  /*
+   * Removes user from subscribers list.
+   */
   unsubscribeUser: (psid) => {
     return new Promise((resolve, reject) => {
       db.query('DELETE FROM subscribers WHERE psid = ($1)', [ psid ], (error, result) => {
@@ -56,6 +62,9 @@ const dbUtils = {
     });
   },
 
+  /*
+   * Fetches subscribers list from the db.
+   */
   getSubscribers: () => {
     return new Promise((resolve, reject) => {
       db.query('SELECT psid FROM subscribers', (err, res) => {
@@ -68,6 +77,9 @@ const dbUtils = {
     });
   },
 
+  /*
+   * Adds sent reminders to the reminders list.
+   */
   saveReminders: (reminders) => {
     reminders.forEach((reminder) => {
       db.query("INSERT INTO reminders(contest_id, last_sent) \
@@ -81,6 +93,9 @@ const dbUtils = {
     });
   },
 
+  /*
+   * Fetches sent reminders list from the db.
+   */
   getReminders: (contests) => {
     return new Promise((resolve, reject) => {
       const contestIds = contests.map((contest) => `CF${ contest.id }`);

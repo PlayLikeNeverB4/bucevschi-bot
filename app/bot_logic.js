@@ -51,6 +51,10 @@ const buildFutureContestsMessage = (contests) => {
 
 
 const botLogic = {
+  /*
+   * Returns the text that the bot should send back based on the received text.
+   * Has side effects like adding user to the subscribers list.
+   */
   getResponse: (receivedText, psid) => {
     receivedText = receivedText.toLowerCase();
 
@@ -68,15 +72,15 @@ const botLogic = {
       } else if (isUnsubscribeMessage(receivedText)) {
         dbUtils.unsubscribeUser(psid).then((result) => {
           if (result === 'ok') {
-            resolve("Ai fost sters din lista utilizatorilor abonati la mine! :(");
+            resolve('Ai fost sters din lista utilizatorilor abonati la mine! :(');
           } else if (result === 'not_found') {
-            resolve("Nu esti abonat la mine... :-/");
+            resolve('Nu esti abonat la mine... :-/');
           } else {
-            resolve("A fost o eroare in timpul executarii acestei comenzi!");
+            resolve('A fost o eroare in timpul executarii acestei comenzi!');
           }
         });
       } else if (isGreetingMessage(receivedText)) {
-        resolve("Salut! Eu sunt un bot care te anunta si iti aminteste despre concursuri.");
+        resolve('Salut! Eu sunt un bot care te anunta si iti aminteste despre concursuri. Daca te abonezi la mine vei primi notificari cu o zi si cu 2 ore inainte de concursuri. Foloseste optiunile din meniu.');
       } else if (isNextMessage(receivedText)) {
         codeforcesAPI.fetchFutureContests().then((contests) => {
           resolve(buildFutureContestsMessage(contests));
@@ -88,7 +92,9 @@ const botLogic = {
   },
 
   /* reminder = {
-   *   ...
+   *   contestStartTime: ...
+   *   contestName: ...
+   *   contestId: ...
    * }
    */
   getReminderText: (reminder) => {

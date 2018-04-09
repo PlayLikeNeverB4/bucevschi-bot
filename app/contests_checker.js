@@ -12,7 +12,9 @@ const _ = require('lodash'),
 const TWO_HOURS_IN_DAYS = 1.0 / 12;
 
 
-// Checks which contests we didn't send reminders for
+/*
+ * Checks which contests we need to send reminders for.
+ */
 const getReminders = (contests) => {
   return new Promise((resolve, reject) => {
     const reminders = [];
@@ -53,6 +55,9 @@ const getReminders = (contests) => {
 
 
 const contestsChecker = {
+  /*
+   * Checks if we need to send reminders and sends them.
+   */
   checkContestReminders: () => {
     logger.info('Checking for contests...');
     codeforcesAPI.fetchFutureContests().then((contests) => {

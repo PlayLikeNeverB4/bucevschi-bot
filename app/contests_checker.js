@@ -75,10 +75,10 @@ const contestsChecker = {
               logger.verbose('Sending reminders...');
               reminders.forEach((reminder) => {
                 subscribers.forEach((subscriber) => {
-                  // console.log(bot);
-                  // console.log(bot.sendContestReminder);
                   bot.sendContestReminder(subscriber.psid, reminder);
-                })
+                });
+                // TODO: un-comment the next line after figuring out how to get a permanent page post access token
+                // bot.postPageContestReminder(reminder);
               });
               logger.verbose('Finished sending reminders.');
             }

@@ -6,7 +6,8 @@ const request = require('request'),
       botLogic = require('./bot_logic');
 
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN || config.get('pageAccessToken');
-
+const PAGE_POST_ACCESS_TOKEN = process.env.PAGE_POST_ACCESS_TOKEN || config.get('pagePostAccessToken');
+const PAGE_ID = process.env.PAGE_ID || config.get('pageId');
 
 /*
  * Sends message via the Send API.
@@ -32,6 +33,30 @@ const callSendAPI = (senderPSID, response) => {
       logger.debug(requestBody);
     } else {
       logger.error('Unable to send message: ' + err);
+    }
+  });
+};
+
+/*
+ * Post on the Page via the Graph API.
+ */
+const callPagePostAPI = (text) => {
+  request({
+    "uri": `https://graph.facebook.com/${ PAGE_ID }/feed`,
+    "qs": {
+      "message": text,
+      "access_token": PAGE_POST_ACCESS_TOKEN
+    },
+    "method": "POST"
+  }, (err, res, body) => {
+    if (!err) {
+      logger.debug(body);
+      const bodyObj = JSON.parse(body);
+      if (bodyObj["error"] && bodyObj["error"]["error_user_msg"]) {
+        logger.error(bodyObj["error"]["error_user_msg"]);
+      }
+    } else {
+      logger.error('Unable to post to page: ' + err);
     }
   });
 };
@@ -70,6 +95,9 @@ const bot = {
   },
 
   /*
+   * psid: Subscriber ID
+   * text: message string
+   *
    * Sends message to user.
    */
   sendMessage: (psid, text) => {
@@ -80,6 +108,13 @@ const bot = {
   },
 
   /*
+   * psid: Subscriber ID
+   * reminder: {
+   *   contestStartTime: ...
+   *   contestName: ...
+   *   contestId: ...
+   * }
+   *
    * Sends contest reminder to user.
    */
   sendContestReminder: (psid, reminder) => {
@@ -88,6 +123,20 @@ const bot = {
       "text": text,
     };
     callSendAPI(psid, message);
+  },
+
+  /*
+   * reminder: {
+   *   contestStartTime: ...
+   *   contestName: ...
+   *   contestId: ...
+   * }
+   *
+   * Sends contest reminder to user.
+   */
+  postPageContestReminder: (reminder) => {
+    const text = botLogic.getReminderText(reminder);
+    callPagePostAPI(text);
   },
 };
 

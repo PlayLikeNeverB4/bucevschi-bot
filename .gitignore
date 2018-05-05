@@ -4,3 +4,4 @@ config/development.json
 npm-debug.log
 scripts/fb_scripts
 newrelic_agent.log
+.DS_Store

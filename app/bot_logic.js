@@ -3,10 +3,8 @@
 const _ = require('lodash'),
       moment = require('moment'),
       dbUtils = require('./db_utils'),
-      codeforcesAPI = require('./codeforces_api');
+      contestsAPI = require('./contests_api');
 
-
-const CONTESTS_URL = 'http://codeforces.com/contests';
 
 const isSubscribeMessage = (text) => {
   return text === 'subscribe' ||
@@ -28,23 +26,26 @@ const isNextMessage = (text) => {
 };
 
 
-const buildTimeUntilContestString = (startTimeSeconds) => {
-  return moment(startTimeSeconds * 1000).fromNow(true);
+const buildTimeUntilContestString = (startTimeMs) => {
+  return moment(startTimeMs).fromNow(true);
 };
 
 const buildFutureContestMessage = (contest) => {
-  const timeString = buildTimeUntilContestString(contest.startTimeSeconds);
-  return `${ contest.name } (peste aproximativ ${ timeString })`;
+  const timeString = buildTimeUntilContestString(contest.startTimeMs);
+  const sourcePrettyName = contestsAPI.SOURCES_INFO[contest.source].prettyName;
+  return `*${ contest.name }* [peste ${ timeString }] [${ sourcePrettyName }]`;
 };
 
 const buildFutureContestsMessage = (contests) => {
-  let text = 'Urmatoarele concursuri de pe Codeforces sunt:\n';
+  let text = 'Urmatoarele concursuri sunt:\n';
 
   contests.forEach((contest) => {
     text += buildFutureContestMessage(contest) + '\n';
   });
 
-  text += `URL: ${ CONTESTS_URL }`;
+  _.values(contestsAPI.SOURCES_INFO).forEach((sourceInfo) => {
+    text += `${ sourceInfo.prettyName }: ${ sourceInfo.contestsURL }\n`;
+  });
 
   return text;
 };
@@ -82,7 +83,7 @@ const botLogic = {
       } else if (isGreetingMessage(receivedText)) {
         resolve('Salut! Eu sunt un bot care te anunta si iti aminteste despre concursuri. Daca te abonezi la mine vei primi notificari cu o zi si cu 2 ore inainte de concursuri. Foloseste optiunile din meniu.');
       } else if (isNextMessage(receivedText)) {
-        codeforcesAPI.fetchFutureContests().then((contests) => {
+        contestsAPI.fetchFutureContests().then((contests) => {
           resolve(buildFutureContestsMessage(contests));
         });
       } else {
@@ -92,13 +93,13 @@ const botLogic = {
   },
 
   /* reminder: {
-   *   contestStartTime: ...
+   *   contestStartTimeMs: ...
    *   contestName: ...
    *   contestId: ...
    * }
    */
   getReminderText: (reminder) => {
-    const timeString = buildTimeUntilContestString(reminder.contestStartTime);
+    const timeString = buildTimeUntilContestString(reminder.contestStartTimeMs);
 
     return `Concursul ${ reminder.contestName } de pe Codeforces va avea loc in aproximativ ${ timeString }. ${ CONTESTS_URL }`;
   },

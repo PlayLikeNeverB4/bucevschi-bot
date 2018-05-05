@@ -7,7 +7,7 @@ const _ = require('lodash'),
       config = require('config'),
       bot = require('./bot'),
       dbUtils = require('./db_utils'),
-      codeforcesAPI = require('./codeforces_api');
+      contestsAPI = require('./contests_api');
 
 const TWO_HOURS_IN_DAYS = 1.0 / 12;
 
@@ -27,23 +27,23 @@ const getReminders = (contests) => {
 
       const now = moment();
       contests.forEach((contest) => {
-        const contestId = `CF${ contest.id }`;
+        const contestId = `${ contest.source }${ contest.id }`;
         const reminder = reminderTimestampByContestId[contestId];
 
         let reminderDaysToContest;
         if (reminder) {
-          reminderDaysToContest = moment(contest.startTimeSeconds * 1000).diff(moment(reminder.last_sent), 'days', true);
+          reminderDaysToContest = moment(contest.startTimeMs).diff(moment(reminder.last_sent), 'days', true);
         } else {
           reminderDaysToContest = 1000;
         }
-        const currentDaysToContest = moment(contest.startTimeSeconds * 1000).diff(now, 'days', true);
+        const currentDaysToContest = moment(contest.startTimeMs).diff(now, 'days', true);
 
         if (reminderDaysToContest > TWO_HOURS_IN_DAYS && currentDaysToContest <= TWO_HOURS_IN_DAYS ||
             reminderDaysToContest > 1 && currentDaysToContest <= 1) {
           reminders.push({
             contestId: contestId,
             contestName: contest.name,
-            contestStartTime: contest.startTimeSeconds,
+            contestStartTimeMs: contest.startTimeMs,
           });
         }
       });
@@ -60,7 +60,7 @@ const contestsChecker = {
    */
   checkContestReminders: () => {
     logger.info('Checking for contests...');
-    codeforcesAPI.fetchFutureContests().then((contests) => {
+    contestsAPI.fetchFutureContests().then((contests) => {
       logger.verbose(`Got ${ contests.length } future contests, checking dates...`);
       logger.debug(contests);
       getReminders(contests).then((reminders) => {

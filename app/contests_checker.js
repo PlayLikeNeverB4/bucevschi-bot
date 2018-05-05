@@ -45,6 +45,7 @@ const getReminders = (contests) => {
             contestName: contest.name,
             contestStartTimeMs: contest.startTimeMs,
             contestSource: contest.source,
+            contestURL: contest.url,
           });
         }
       });

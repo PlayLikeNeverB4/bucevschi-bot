@@ -7,7 +7,7 @@ class baseContestAPI {
   static fetchContests() {
     return new Promise((resolve, reject) => {
       request({
-        "uri": this.API_URL,
+        "uri": this.getAPIUrl(),
         "method": "GET"
       }, (error, result, body) => {
         if (!error) {
@@ -26,6 +26,10 @@ class baseContestAPI {
         }
       }); 
     });
+  }
+
+  static getAPIUrl() {
+    return this.API_URL;
   }
 
   static isResponseOK(response) {

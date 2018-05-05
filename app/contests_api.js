@@ -3,15 +3,17 @@
 const _ = require('lodash'),
       moment = require('moment'),
       codeforcesAPI = require('./apis/codeforces_api'),
-      atcoderAPI = require('./apis/atcoder_api');
+      atcoderAPI = require('./apis/atcoder_api'),
+      csacademyAPI = require('./apis/csacademy_api');
 
-const apis = [ codeforcesAPI, atcoderAPI ];
+const apis = [ codeforcesAPI, atcoderAPI, csacademyAPI ];
 
 const fetchContestsFromAllAPIs = () => {
   return new Promise((resolve, reject) => {
     const apiPromises = apis.map((api) => api.fetchContests());
     Promise.all(apiPromises).then((results) => {
-      const contests = _.flatten(results);
+      let contests = _.flatten(results);
+      contests = _.sortBy(contests, 'startTimeMs');
       resolve(contests);
     });
   });

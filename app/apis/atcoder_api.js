@@ -9,6 +9,7 @@ class atcoderAPI extends baseContestAPI {
       name: contest.name,
       startTimeMs: contest.startTimeSeconds * 1000,
       source: this.SOURCE_ID,
+      url: contest.url,
     };
   }
 };

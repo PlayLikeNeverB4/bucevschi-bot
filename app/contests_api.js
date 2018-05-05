@@ -2,9 +2,10 @@
 
 const _ = require('lodash'),
       moment = require('moment'),
-      codeforcesAPI = require('./apis/codeforces_api');
+      codeforcesAPI = require('./apis/codeforces_api'),
+      atcoderAPI = require('./apis/atcoder_api');
 
-const apis = [ codeforcesAPI ];
+const apis = [ codeforcesAPI, atcoderAPI ];
 
 const fetchContestsFromAllAPIs = () => {
   return new Promise((resolve, reject) => {

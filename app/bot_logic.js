@@ -96,12 +96,15 @@ const botLogic = {
    *   contestStartTimeMs: ...
    *   contestName: ...
    *   contestId: ...
+   *   contestSource: ...
    * }
    */
   getReminderText: (reminder) => {
     const timeString = buildTimeUntilContestString(reminder.contestStartTimeMs);
+    const source = reminder.contestSource;
+    const sourceURL = contestsAPI.SOURCES_INFO[source].contestsURL;
 
-    return `Concursul ${ reminder.contestName } de pe Codeforces va avea loc in aproximativ ${ timeString }. ${ CONTESTS_URL }`;
+    return `Concursul ${ reminder.contestName } de pe Codeforces va avea loc in aproximativ ${ timeString }. ${ sourceURL }`;
   },
 };
 

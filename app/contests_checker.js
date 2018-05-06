@@ -89,6 +89,7 @@ const contestsChecker = {
           dbUtils.saveReminders(reminders);
         }
       });
+      dbUtils.removeOldReminders();
     });
   },
 };

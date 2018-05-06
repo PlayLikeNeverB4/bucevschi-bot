@@ -111,6 +111,17 @@ const dbUtils = {
       });
     });
   },
+
+  /*
+   * Deletes old useless reminders from the db.
+   */
+  removeOldReminders: () => {
+    db.query(`DELETE FROM reminders WHERE last_sent < NOW() - INTERVAL '30 days'`, (err, res) => {
+      if (err) {
+        logger.error('Error while deleting old reminders!');
+      }
+    });
+  },
 };
 
 module.exports = dbUtils;

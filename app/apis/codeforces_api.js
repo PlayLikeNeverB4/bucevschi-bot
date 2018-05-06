@@ -19,7 +19,7 @@ class codeforcesAPI extends baseContestAPI {
       source: this.SOURCE_ID,
     };
   }
-};
+}
 
 codeforcesAPI.API_URL = 'http://codeforces.com/api/contest.list';
 codeforcesAPI.SOURCE_ID = 'CF';

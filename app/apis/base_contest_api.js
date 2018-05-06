@@ -6,11 +6,11 @@ const request = require('request'),
 
 class baseContestAPI {
   static fetchContests() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       request({
         "uri": this.getAPIUrl(),
-        "method": "GET"
-      }, (error, result, body) => {
+        "method": "GET",
+      }, (error, result) => {
         if (!error) {
           const response = JSON.parse(result.body);
           if (this.isResponseOK(response)) {
@@ -24,7 +24,9 @@ class baseContestAPI {
             resolve([]);
           }
         } else {
-          logger.error(`[${ this.SOURCE_ID }] Unable to fetch contests: ${ error }`);
+          logger.error(
+            `[${ this.SOURCE_ID }] Unable to fetch contests: ${ error }`
+          );
           resolve([]);
         }
       }); 
@@ -42,6 +44,6 @@ class baseContestAPI {
   static getContestsList(response) {
     return response;
   }
-};
+}
 
 module.exports = baseContestAPI;

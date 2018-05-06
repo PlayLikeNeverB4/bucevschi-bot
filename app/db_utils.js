@@ -1,6 +1,6 @@
 'use strict';
 
-const { Client } = require('pg');
+const { Client, } = require('pg');
 const config = require('config'),
       _ = require('lodash'),
       logger = require("winston");
@@ -30,18 +30,20 @@ const dbUtils = {
    * Adds user to subscribers list.
    */
   subscribeUser: (psid) => {
-    return new Promise((resolve, reject) => {
-      db.query('INSERT INTO subscribers(psid) values($1)', [ psid ], (error, result) => {
-        if (error) {
-          if (error.detail.indexOf('already exists') != -1) {
-            resolve('duplicate');
+    return new Promise((resolve) => {
+      db.query('INSERT INTO subscribers(psid) values($1)', [ psid, ],
+        (error) => {
+          if (error) {
+            if (error.detail.indexOf('already exists') !== -1) {
+              resolve('duplicate');
+            } else {
+              resolve('error');
+            }
           } else {
-            resolve('error');
+            resolve('ok');
           }
-        } else {
-          resolve('ok');
         }
-      });
+      );
     });
   },
 
@@ -49,16 +51,18 @@ const dbUtils = {
    * Removes user from subscribers list.
    */
   unsubscribeUser: (psid) => {
-    return new Promise((resolve, reject) => {
-      db.query('DELETE FROM subscribers WHERE psid = ($1)', [ psid ], (error, result) => {
-        if (error) {
-          resolve('error');
-        } else if (result.rowCount === 0) {
-          resolve('not_found');
-        } else {
-          resolve('ok');
+    return new Promise((resolve) => {
+      db.query('DELETE FROM subscribers WHERE psid = ($1)', [ psid, ],
+        (error, result) => {
+          if (error) {
+            resolve('error');
+          } else if (result.rowCount === 0) {
+            resolve('not_found');
+          } else {
+            resolve('ok');
+          }
         }
-      });
+      );
     });
   },
 
@@ -66,7 +70,7 @@ const dbUtils = {
    * Fetches subscribers list from the db.
    */
   getSubscribers: () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       db.query('SELECT psid FROM subscribers', (err, res) => {
         if (!err) {
           resolve(res.rows);
@@ -85,7 +89,7 @@ const dbUtils = {
       db.query("INSERT INTO reminders(contest_id, last_sent) \
                 VALUES ($1, NOW()) \
                 ON CONFLICT (contest_id) DO UPDATE \
-                SET last_sent = NOW()", [ reminder.contestId ], (err, res) => {
+                SET last_sent = NOW()", [ reminder.contestId, ], (err) => {
         if (err) {
           logger.error('Error while saving reminders!');
         }
@@ -97,12 +101,14 @@ const dbUtils = {
    * Fetches sent reminders list from the db.
    */
   getReminders: (contests) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const contestIds = contests.map((contest) => `CF${ contest.id }`);
       const params = _.map(contestIds, (contestId, index) => `$${ index + 1 }`);
       const paramsString = params.join(",");
 
-      db.query(`SELECT contest_id, last_sent FROM reminders WHERE contest_id IN (${ paramsString })`, contestIds, (err, res) => {
+      const sql = `SELECT contest_id, last_sent FROM reminders ` +
+                  `WHERE contest_id IN (${ paramsString })`;
+      db.query(sql, contestIds, (err, res) => {
         if (!err) {
           resolve(res.rows);
         } else {
@@ -116,11 +122,14 @@ const dbUtils = {
    * Deletes old useless reminders from the db.
    */
   removeOldReminders: () => {
-    db.query(`DELETE FROM reminders WHERE last_sent < NOW() - INTERVAL '30 days'`, (err, res) => {
-      if (err) {
-        logger.error('Error while deleting old reminders!');
+    db.query(
+      `DELETE FROM reminders WHERE last_sent < NOW() - INTERVAL '30 days'`,
+      (err) => {
+        if (err) {
+          logger.error('Error while deleting old reminders!');
+        }
       }
-    });
+    );
   },
 };
 

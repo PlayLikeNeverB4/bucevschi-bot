@@ -9,7 +9,10 @@ const CLIST_API_USER = process.env.CLIST_API_USER || config.get('clistAPIUser');
 
 class csacademyAPI extends baseContestAPI {
   static getAPIUrl() {
-    return this.API_URL + `&username=${ CLIST_API_USER }&api_key=${ CLIST_API_KEY }&start__gt=${ moment().format('YYYY-MM-DD') }`;
+    return this.API_URL +
+           `&username=${ CLIST_API_USER }` + 
+           `&api_key=${ CLIST_API_KEY }` + 
+           `&start__gt=${ moment().format('YYYY-MM-DD') }`;
   }
 
   static isResponseOK(response) {
@@ -30,7 +33,7 @@ class csacademyAPI extends baseContestAPI {
       url: contest.href,
     };
   }
-};
+}
 
 csacademyAPI.API_URL = 'https://clist.by/api/v1/json/contest/?resource__id=90';
 csacademyAPI.SOURCE_ID = 'CSACADEMY';

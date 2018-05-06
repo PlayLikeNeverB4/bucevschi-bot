@@ -6,10 +6,14 @@ const _ = require('lodash'),
       atcoderAPI = require('./apis/atcoder_api'),
       csacademyAPI = require('./apis/csacademy_api');
 
-const apis = [ codeforcesAPI, atcoderAPI, csacademyAPI ];
+const apis = [
+  codeforcesAPI,
+  atcoderAPI,
+  csacademyAPI,
+];
 
 const fetchContestsFromAllAPIs = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const apiPromises = apis.map((api) => api.fetchContests());
     Promise.all(apiPromises).then((results) => {
       let contests = _.flatten(results);
@@ -41,7 +45,7 @@ const contestsAPI = {
    * }
    */
   fetchFutureContests: () => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       fetchContestsFromAllAPIs().then((contests) => {
         contests = filterFutureContests(contests);
         resolve(contests);
@@ -57,8 +61,8 @@ const apisSourceInfo = apis.map((api) => {
     [ api.SOURCE_ID ]: {
       contestsURL: api.CONTESTS_URL,
       prettyName: api.PRETTY_NAME,
-    }
-  }
+    },
+  };
 });
 
 apisSourceInfo.forEach((apiSourceInfo) => {

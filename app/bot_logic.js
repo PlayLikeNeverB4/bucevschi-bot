@@ -46,7 +46,10 @@ const buildFutureContestsMessage = (contests) => {
     });
 
     _.forOwn(contestsAPI.SOURCES_INFO, (sourceInfo, sourceId) => {
-      const anyContestWithSource = _.some(contests, (contest) => contest.source === sourceId);
+      const anyContestWithSource = _.some(
+                                    contests,
+                                    (contest) => contest.source === sourceId
+                                  );
       if (anyContestWithSource) {
         text += `${ sourceInfo.prettyName }: ${ sourceInfo.contestsURL }\n`;
       }
@@ -67,11 +70,12 @@ const botLogic = {
   getResponse: (receivedText, psid) => {
     receivedText = receivedText.toLowerCase();
 
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       if (isSubscribeMessage(receivedText)) {
         dbUtils.subscribeUser(psid).then((result) => {
           if (result === 'ok') {
-            resolve('Ai fost adaugat la lista utilizatorilor abonati la mine! :D');
+            resolve('Ai fost adaugat la lista utilizatorilor ' +
+                    'abonati la mine! :D');
           } else if (result === 'duplicate') {
             resolve('Esti deja pe lista utilizatorilor abonati la mine! B-)');
           } else {
@@ -81,7 +85,8 @@ const botLogic = {
       } else if (isUnsubscribeMessage(receivedText)) {
         dbUtils.unsubscribeUser(psid).then((result) => {
           if (result === 'ok') {
-            resolve('Ai fost sters din lista utilizatorilor abonati la mine! :(');
+            resolve('Ai fost sters din lista utilizatorilor ' +
+                    'abonati la mine! :(');
           } else if (result === 'not_found') {
             resolve('Nu esti abonat la mine... :-/');
           } else {
@@ -89,7 +94,10 @@ const botLogic = {
           }
         });
       } else if (isGreetingMessage(receivedText)) {
-        resolve('Salut! Eu sunt un bot care te anunta si iti aminteste despre concursuri. Daca te abonezi la mine vei primi notificari cu o zi si cu 2 ore inainte de concursuri. Foloseste optiunile din meniu.');
+        resolve('Salut! Eu sunt un bot care te anunta si iti aminteste ' +
+                'despre concursuri. Daca te abonezi la mine vei primi ' +
+                'notificari cu o zi si cu 2 ore inainte de concursuri. ' +
+                'Foloseste optiunile din meniu.');
       } else if (isNextMessage(receivedText)) {
         contestsAPI.fetchFutureContests().then((contests) => {
           resolve(buildFutureContestsMessage(contests));
@@ -110,10 +118,13 @@ const botLogic = {
   getReminderText: (reminder) => {
     const timeString = buildTimeUntilContestString(reminder.contestStartTimeMs);
     const source = reminder.contestSource;
-    const sourceURL = reminder.contestURL || contestsAPI.SOURCES_INFO[source].contestsURL;
-    const sourcePrettyName = contestsAPI.SOURCES_INFO[source].prettyName;
+    const sourceInfo = contestsAPI.SOURCES_INFO[source];
+    const sourceURL = reminder.contestURL || sourceInfo.contestsURL;
+    const sourcePrettyName = sourceInfo.prettyName;
 
-    return `Concursul *${ reminder.contestName }* de pe *${ sourcePrettyName }* va avea loc in aproximativ *${ timeString }*. ${ sourceURL }`;
+    return `Concursul *${ reminder.contestName }* de pe ` +
+           `*${ sourcePrettyName }* va avea loc in aproximativ ` +
+           `*${ timeString }*. ${ sourceURL }`;
   },
 };
 

@@ -12,7 +12,7 @@ class atcoderAPI extends baseContestAPI {
       url: contest.url,
     };
   }
-};
+}
 
 atcoderAPI.API_URL = 'https://contest-parser.herokuapp.com/contests/atcoder';
 atcoderAPI.SOURCE_ID = 'ATCODER';

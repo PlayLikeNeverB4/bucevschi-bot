@@ -1,0 +1,67 @@
+{
+  "extends": [
+    "eslint:recommended"
+  ],
+  "plugins": [
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "destructuring": true,
+      "spread": true,
+      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jasmine": true
+  },
+  "globals": {
+    "Promise": false
+  },
+  "rules": {
+    "prefer-spread": "error",
+    "semi": "error",
+    "eqeqeq": "error",
+    "no-extra-semi": "error",
+    "semi-spacing": "error",
+    "max-len": "error",
+    "no-tabs": "error",
+    "no-multi-spaces": "error",
+    "no-var": "error",
+    "prefer-const": "error",
+    "prefer-arrow-callback": "error",
+    "array-bracket-spacing": [
+      "error",
+      "always"
+    ],
+    "block-spacing": [
+      "error",
+      "always"
+    ],
+    "comma-spacing": "error",
+    "eol-last": "error",
+    "global-require": "error",
+    "no-mixed-requires": "error",
+    "comma-dangle": [
+      "error",
+      "always"
+    ],
+    "no-console": "error",
+    "key-spacing": "error",
+    "object-property-newline": "error",
+    "brace-style": "error",
+    "guard-for-in": "error",
+    "arrow-parens": "error",
+    "arrow-spacing": "error",
+    "camelcase": "error",
+    "curly": [
+      "error",
+      "all"
+    ],
+    "space-infix-ops": "error",
+    "keyword-spacing": "error"
+  }
+}

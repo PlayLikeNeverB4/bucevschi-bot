@@ -6,7 +6,8 @@
   "scripts": {
     "start": "scripts/start",
     "dev": "scripts/start-dev",
-    "test": "node_modules/mocha/bin/mocha test/*.coffee --exit"
+    "test": "node_modules/mocha/bin/mocha test/*.coffee --exit",
+    "lint": "scripts/lint || exit 0"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,12 @@
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
     "coffeescript": "^2.2.3",
+    "eslint": "^5.0.0-alpha.2",
+    "eslint-config-standard": "^12.0.0-alpha.0",
+    "eslint-plugin-import": "^2.11.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.1.0",
     "mocha": "^5.0.5",
     "rewire": "^3.0.2",
     "sinon": "^4.4.10"

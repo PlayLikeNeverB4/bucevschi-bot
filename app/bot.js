@@ -5,8 +5,10 @@ const request = require('request'),
       logger = require("winston"),
       botLogic = require('./bot_logic');
 
-const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN || config.get('pageAccessToken');
-const PAGE_POST_ACCESS_TOKEN = process.env.PAGE_POST_ACCESS_TOKEN || config.get('pagePostAccessToken');
+const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN ||
+                          config.get('pageAccessToken');
+const PAGE_POST_ACCESS_TOKEN = process.env.PAGE_POST_ACCESS_TOKEN ||
+                               config.get('pagePostAccessToken');
 const PAGE_ID = process.env.PAGE_ID || config.get('pageId');
 
 /*
@@ -24,10 +26,12 @@ const callSendAPI = (senderPSID, response) => {
   // Send the HTTP request to the Messenger Platform
   request({
     "uri": "https://graph.facebook.com/v2.6/me/messages",
-    "qs": { "access_token": PAGE_ACCESS_TOKEN },
+    "qs": {
+      "access_token": PAGE_ACCESS_TOKEN,
+    },
     "method": "POST",
-    "json": requestBody
-  }, (err, res, body) => {
+    "json": requestBody,
+  }, (err) => {
     if (!err) {
       logger.verbose('Message sent!');
       logger.debug(requestBody);
@@ -45,9 +49,9 @@ const callPagePostAPI = (text) => {
     "uri": `https://graph.facebook.com/${ PAGE_ID }/feed`,
     "qs": {
       "message": text,
-      "access_token": PAGE_POST_ACCESS_TOKEN
+      "access_token": PAGE_POST_ACCESS_TOKEN,
     },
-    "method": "POST"
+    "method": "POST",
   }, (err, res, body) => {
     if (!err) {
       logger.debug(body);
@@ -71,12 +75,13 @@ const bot = {
   handleMessage: (senderPSID, receivedMessage) => {
     // Check if the message contains text
     if (receivedMessage.text) {
-      botLogic.getResponse(receivedMessage.text, senderPSID).then((responseText) => {
-        const response = {
-          "text": responseText,
-        };
-        callSendAPI(senderPSID, response);
-      });
+      botLogic.getResponse(receivedMessage.text, senderPSID)
+        .then((responseText) => {
+          const response = {
+            "text": responseText,
+          };
+          callSendAPI(senderPSID, response);
+        });
     } else {
       callSendAPI(senderPSID, null);
     }
@@ -86,12 +91,13 @@ const bot = {
    * Handles messaging_postbacks events.
    */
   handlePostback: (senderPSID, receivedPostback) => {
-    botLogic.getResponse(receivedPostback.payload, senderPSID).then((responseText) => {
-      const response = {
-        "text": responseText,
-      };
-      callSendAPI(senderPSID, response);
-    });
+    botLogic.getResponse(receivedPostback.payload, senderPSID)
+      .then((responseText) => {
+        const response = {
+          "text": responseText,
+        };
+        callSendAPI(senderPSID, response);
+      });
   },
 
   /*
@@ -104,7 +110,7 @@ const bot = {
     const message = {
       "text": text,
     };
-    callSendAPI(senderPSID, message);
+    callSendAPI(psid, message);
   },
 
   /*

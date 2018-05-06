@@ -37,18 +37,23 @@ const buildFutureContestMessage = (contest) => {
 };
 
 const buildFutureContestsMessage = (contests) => {
-  let text = 'Urmatoarele concursuri sunt:\n';
+  let text;
+  if (!_.isEmpty(contests)) {
+    text = 'Urmatoarele concursuri sunt:\n';
 
-  contests.forEach((contest) => {
-    text += buildFutureContestMessage(contest) + '\n';
-  });
+    contests.forEach((contest) => {
+      text += buildFutureContestMessage(contest) + '\n';
+    });
 
-  _.forOwn(contestsAPI.SOURCES_INFO, (sourceInfo, sourceId) => {
-    const anyContestWithSource = _.some(contests, (contest) => contest.source === sourceId);
-    if (anyContestWithSource) {
-      text += `${ sourceInfo.prettyName }: ${ sourceInfo.contestsURL }\n`;
-    }
-  });
+    _.forOwn(contestsAPI.SOURCES_INFO, (sourceInfo, sourceId) => {
+      const anyContestWithSource = _.some(contests, (contest) => contest.source === sourceId);
+      if (anyContestWithSource) {
+        text += `${ sourceInfo.prettyName }: ${ sourceInfo.contestsURL }\n`;
+      }
+    });
+  } else {
+    text = 'Nu urmeaza niciun concurs in viitorul apropiat :O';
+  }
 
   return text;
 };

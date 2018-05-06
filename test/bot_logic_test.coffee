@@ -9,15 +9,19 @@ sinon = require 'sinon'
 moment = require 'moment'
 _ = require 'lodash'
 
-now = moment().unix()
+moment.locale('ro');
+moment.tz.setDefault('UTC');
+
+now = moment().unix() * 1000
 
 describe 'bot_logic', ->
   describe 'getReminderText', ->
     it 'should compute correct text', ->
       reminder =
-        contestStartTime: now + 3600 * 24 - 23
+        contestStartTimeMs: now + 3600 * 24 * 1000 - 23
         contestName: 'Contest name'
+        contestSource: 'CF'
 
       reminderText = botLogic.getReminderText(reminder)
 
-      expect(reminderText).to.contain('24 de ore')
+      expect(reminderText).to.contain('o zi')

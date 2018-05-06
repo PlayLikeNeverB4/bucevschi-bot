@@ -17,12 +17,12 @@ const isUnsubscribeMessage = (text) => {
 };
 
 const isGreetingMessage = (text) => {
-  return text === 'salut';
+  return text.includes('salut');
 };
 
 const isNextMessage = (text) => {
-  return text == 'next' ||
-         text == 'urmatoarele';
+  return text.includes('next') ||
+         text.includes('urmatoare');
 };
 
 

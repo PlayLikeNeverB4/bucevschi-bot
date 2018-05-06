@@ -1,7 +1,8 @@
 'use strict';
 
 const request = require('request'),
-      _ = require('lodash');
+      _ = require('lodash'),
+      logger = require('winston');
 
 class baseContestAPI {
   static fetchContests() {
@@ -19,11 +20,11 @@ class baseContestAPI {
             contests = _.sortBy(contests, 'startTimeMs');
             resolve(contests);
           } else {
-            logger.error('API call returned with error!');
+            logger.error(`[${ this.SOURCE_ID }] API call returned with error!`);
             resolve([]);
           }
         } else {
-          logger.error("Unable to fetch contests: " + error);
+          logger.error(`[${ this.SOURCE_ID }] Unable to fetch contests: ${ error }`);
           resolve([]);
         }
       }); 

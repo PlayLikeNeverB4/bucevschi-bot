@@ -22,7 +22,9 @@ const fetchContestsFromAllAPIs = () => {
 const filterFutureContests = (contests) => {
   const now = moment.now();
   return _.filter(contests, (contest) => {
-    return contest.startTimeMs && contest.startTimeMs >= now;
+    return contest.startTimeMs &&
+           contest.startTimeMs >= now &&
+           moment(contest.startTimeMs).diff(now, 'months', true) <= 1;
   });
 };
 

@@ -43,8 +43,11 @@ const buildFutureContestsMessage = (contests) => {
     text += buildFutureContestMessage(contest) + '\n';
   });
 
-  _.values(contestsAPI.SOURCES_INFO).forEach((sourceInfo) => {
-    text += `${ sourceInfo.prettyName }: ${ sourceInfo.contestsURL }\n`;
+  _.forOwn(contestsAPI.SOURCES_INFO, (sourceInfo, sourceId) => {
+    const anyContestWithSource = _.some(contests, (contest) => contest.source === sourceId);
+    if (anyContestWithSource) {
+      text += `${ sourceInfo.prettyName }: ${ sourceInfo.contestsURL }\n`;
+    }
   });
 
   return text;

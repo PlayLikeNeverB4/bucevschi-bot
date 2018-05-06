@@ -20,9 +20,11 @@ class baseContestAPI {
             resolve(contests);
           } else {
             logger.error('API call returned with error!');
+            resolve([]);
           }
         } else {
           logger.error("Unable to fetch contests: " + error);
+          resolve([]);
         }
       }); 
     });

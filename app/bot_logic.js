@@ -33,7 +33,7 @@ const buildTimeUntilContestString = (startTimeMs) => {
 const buildFutureContestMessage = (contest) => {
   const timeString = buildTimeUntilContestString(contest.startTimeMs);
   const sourcePrettyName = contestsAPI.SOURCES_INFO[contest.source].prettyName;
-  return `*${ contest.name }* [peste ${ timeString }] [${ sourcePrettyName }]`;
+  return `[peste ${ timeString }] [${ sourcePrettyName }] ${ contest.name }`;
 };
 
 const buildFutureContestsMessage = (contests) => {
@@ -122,9 +122,9 @@ const botLogic = {
     const sourceURL = reminder.contestURL || sourceInfo.contestsURL;
     const sourcePrettyName = sourceInfo.prettyName;
 
-    return `Concursul *${ reminder.contestName }* de pe ` +
-           `*${ sourcePrettyName }* va avea loc in aproximativ ` +
-           `*${ timeString }*. ${ sourceURL }`;
+    return `Concursul ${ reminder.contestName } de pe ` +
+           `${ sourcePrettyName } va avea loc in aproximativ ` +
+           `${ timeString }. ${ sourceURL }`;
   },
 };
 

@@ -6,7 +6,7 @@ const request = require('request'),
 
 class baseContestAPI {
   static fetchContests() {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       try {
         request.get({
           "uri": this.getAPIUrl(),
@@ -20,7 +20,7 @@ class baseContestAPI {
               contests = _.sortBy(contests, 'startTimeMs');
               resolve(contests);
             } else {
-              logger.error(`[${ this.SOURCE_ID }] API call returned with error!`);
+              logger.error(`[${ this.SOURCE_ID }] API call returned error!`);
               resolve([]);
             }
           } else {

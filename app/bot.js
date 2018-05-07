@@ -33,7 +33,7 @@ const callSendAPI = (senderPSID, response) => {
     "json": requestBody,
   }, (err) => {
     if (!err) {
-      logger.verbose('Message sent!');
+      logger.info(`Message sent to ${ senderPSID }!`);
       logger.debug(requestBody);
     } else {
       logger.error('Unable to send message: ' + err);

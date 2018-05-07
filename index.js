@@ -43,11 +43,12 @@ app.post('/webhook', (req, res) => {
       // Gets the message. entry.messaging is an array, but 
       // will only ever contain one message, so we get index 0
       const webhookEvent = entry.messaging[0];
-      logger.info('Received webhook event!');
-      logger.verbose(webhookEvent);
 
       // Get the sender PSID
       const senderPSID = webhookEvent.sender.id;
+
+      logger.info(`Received message from ${ senderPSID }!`);
+      logger.verbose(webhookEvent);
 
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function

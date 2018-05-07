@@ -11,26 +11,36 @@ class baseContestAPI {
         request.get({
           "uri": this.getAPIUrl(),
         }, (error, result) => {
-          if (!error) {
-            const response = JSON.parse(result.body);
-            if (this.isResponseOK(response)) {
-              let contests = this.getContestsList(response).map((contest) => {
-                return this.getContestMapping(contest);
-              });
-              contests = _.sortBy(contests, 'startTimeMs');
-              resolve(contests);
+          try {
+            if (!error) {
+              const response = JSON.parse(result.body);
+              if (this.isResponseOK(response)) {
+                let contests = this.getContestsList(response).map((contest) => {
+                  return this.getContestMapping(contest);
+                });
+                contests = _.sortBy(contests, 'startTimeMs');
+                resolve(contests);
+              } else {
+                logger.error(`[${ this.SOURCE_ID }] API call returned error!`);
+                resolve([]);
+              }
             } else {
-              logger.error(`[${ this.SOURCE_ID }] API call returned error!`);
+              logger.error(
+                `[${ this.SOURCE_ID }] Unable to fetch contests: ${ error }`
+              );
               resolve([]);
             }
-          } else {
+          } catch (err) {
             logger.error(
-              `[${ this.SOURCE_ID }] Unable to fetch contests: ${ error }`
+              `[${ this.SOURCE_ID }] Exception in inner base API: ${ err }`
             );
             resolve([]);
           }
         });
       } catch (err) {
+        logger.error(
+          `[${ this.SOURCE_ID }] Exception in outer base API: ${ err }`
+        );
         resolve([]);
       }
     });

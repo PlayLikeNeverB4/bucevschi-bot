@@ -35,3 +35,12 @@ describe 'contests_api', ->
 
       contestsAPI.fetchFutureContests().then (contests) =>
         expect(contests).to.have.length(2)
+
+    it 'should not crash if one of the APIs throws an exception #2', ->
+      sinon.stub(codeforcesAPI, 'fetchContests').callsFake () => Promise.resolve([ { contestId: 5454, startTimeMs: now + 2000 } ])
+      sinon.stub(atcoderAPI, 'fetchContests').callsFake () => Promise.resolve([ { contestId: 123, startTimeMs: now + 2000 } ])
+      sinon.stub(request, 'get').callsFake (a, b) =>
+        b(false, '<DOCTYPE/>')
+
+      contestsAPI.fetchFutureContests().then (contests) =>
+        expect(contests).to.have.length(2)

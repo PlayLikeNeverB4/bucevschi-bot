@@ -2,6 +2,7 @@
 
 const _ = require('lodash'),
       moment = require('moment'),
+      logger = require('winston'),
       codeforcesAPI = require('./apis/codeforces_api'),
       atcoderAPI = require('./apis/atcoder_api'),
       csacademyAPI = require('./apis/csacademy_api');

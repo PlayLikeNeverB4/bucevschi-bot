@@ -1,3 +1,2 @@
 #!/bin/bash
-ssh -R ojrfhdkqxxtedgwhvxssabnjfsfxztbxtgfgxdqaqghbjbtwje.serveo.net:80:localhost:1337 serveo.net &
-NODE_ENV=development node index.js && fg
+NODE_ENV=development node index.js

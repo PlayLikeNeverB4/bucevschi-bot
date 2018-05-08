@@ -20,7 +20,9 @@ const callSendAPI = (senderPSID, response) => {
     "recipient": {
       "id": senderPSID,
     },
-    "message": response,
+    "message": {
+      "text": response,
+    },
   };
 
   // Send the HTTP request to the Messenger Platform
@@ -65,6 +67,22 @@ const callPagePostAPI = (text) => {
   });
 };
 
+const handleMessage = (senderPSID, receivedMessage) => {
+  if (receivedMessage) {
+    botLogic.getResponse(receivedMessage, senderPSID)
+      .then((response) => {
+        if (response.messageType === 'simple') {
+          callSendAPI(senderPSID, response.message);
+        } else if (response.messageType === 'admin') {
+          callSendAPI(senderPSID, response.adminMessage);
+          response.subscribers.forEach((subscriber) => {
+            callSendAPI(subscriber.psid, response.message);
+          });
+        }
+    });
+  }
+};
+
 
 // Handles API calls and data formatting
 // Acts as the middle man between the application and the bot logic
@@ -73,31 +91,14 @@ const bot = {
    * Handles messages events.
    */
   handleMessage: (senderPSID, receivedMessage) => {
-    // Check if the message contains text
-    if (receivedMessage.text) {
-      botLogic.getResponse(receivedMessage.text, senderPSID)
-        .then((responseText) => {
-          const response = {
-            "text": responseText,
-          };
-          callSendAPI(senderPSID, response);
-        });
-    } else {
-      callSendAPI(senderPSID, null);
-    }
+    handleMessage(senderPSID, receivedMessage.text);
   },
 
   /*
    * Handles messaging_postbacks events.
    */
   handlePostback: (senderPSID, receivedPostback) => {
-    botLogic.getResponse(receivedPostback.payload, senderPSID)
-      .then((responseText) => {
-        const response = {
-          "text": responseText,
-        };
-        callSendAPI(senderPSID, response);
-      });
+    handleMessage(senderPSID, receivedPostback.payload);
   },
 
   /*
@@ -107,10 +108,7 @@ const bot = {
    * Sends message to user.
    */
   sendMessage: (psid, text) => {
-    const message = {
-      "text": text,
-    };
-    callSendAPI(psid, message);
+    callSendAPI(psid, text);
   },
 
   /*
@@ -125,10 +123,7 @@ const bot = {
    */
   sendContestReminder: (psid, reminder) => {
     const text = botLogic.getReminderText(reminder);
-    const message = {
-      "text": text,
-    };
-    callSendAPI(psid, message);
+    callSendAPI(psid, text);
   },
 
   /*
@@ -138,7 +133,7 @@ const bot = {
    *   contestId: ...
    * }
    *
-   * Sends contest reminder to user.
+   * Sends contest reminder to the bot page.
    */
   postPageContestReminder: (reminder) => {
     const text = botLogic.getReminderText(reminder);

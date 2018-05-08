@@ -18,7 +18,7 @@ const getReminders = (contests) => {
     const reminders = [];
 
     logger.verbose('Fetching previous reminders...');
-    dbUtils.getReminders(contests).then((previousReminders) => {
+    dbUtils.getReminders().then((previousReminders) => {
       logger.debug(previousReminders);
       const reminderTimestampByContestId = _.keyBy(previousReminders,
                                                    'contest_id');

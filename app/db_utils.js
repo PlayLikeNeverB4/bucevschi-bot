@@ -100,15 +100,9 @@ const dbUtils = {
   /*
    * Fetches sent reminders list from the db.
    */
-  getReminders: (contests) => {
+  getReminders: () => {
     return new Promise((resolve) => {
-      const contestIds = contests.map((contest) => `CF${ contest.id }`);
-      const params = _.map(contestIds, (contestId, index) => `$${ index + 1 }`);
-      const paramsString = params.join(",");
-
-      const sql = `SELECT contest_id, last_sent FROM reminders ` +
-                  `WHERE contest_id IN (${ paramsString })`;
-      db.query(sql, contestIds, (err, res) => {
+      db.query(`SELECT contest_id, last_sent FROM reminders`, (err, res) => {
         if (!err) {
           resolve(res.rows);
         } else {

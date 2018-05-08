@@ -8,7 +8,7 @@ const _ = require('lodash'),
 const buildUpcomingContestMessage = (contest) => {
   const timeString = moment(contest.startTimeMs).fromNow(true);
   const sourcePrettyName = contestsAPI.SOURCES_INFO[contest.source].prettyName;
-  return `[peste ${ timeString }] [${ sourcePrettyName }] ${ contest.name }`;
+  return `[${ timeString }] [${ sourcePrettyName }] ${ contest.name }`;
 };
 
 const buildUpcomingContestsMessage = (contests) => {

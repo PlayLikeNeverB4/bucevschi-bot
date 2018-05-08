@@ -14,9 +14,9 @@ const PAGE_ID = process.env.PAGE_ID || config.get('pageId');
 /*
  * Sends message via the Send API.
  */
-const callSendAPI = (senderPSID, response) => {
+const callSendAPI = (senderPSID, response, tag) => {
   // Construct the message body
-  const requestBody = {
+  let requestBody = {
     "recipient": {
       "id": senderPSID,
     },
@@ -24,6 +24,9 @@ const callSendAPI = (senderPSID, response) => {
       "text": response,
     },
   };
+  if (tag) {
+    requestBody["tag"] = 'COMMUNITY_ALERT';
+  }
 
   // Send the HTTP request to the Messenger Platform
   request({
@@ -33,12 +36,16 @@ const callSendAPI = (senderPSID, response) => {
     },
     "method": "POST",
     "json": requestBody,
-  }, (err) => {
-    if (!err) {
+  }, (err, res, body) => {
+    if (!err && !(body && body.error && body.error.message)) {
       logger.info(`Message sent to ${ senderPSID }!`);
       logger.debug(requestBody);
     } else {
-      logger.error('Unable to send message: ' + err);
+      let err2 = '';
+      if (body && body.error && body.error.message) {
+        err2 = body.error.message;
+      }
+      logger.error(`Unable to send message:\n${ err }\n${ err2 }`);
     }
   });
 };
@@ -123,7 +130,7 @@ const bot = {
    */
   sendContestReminder: (psid, reminder) => {
     const text = botLogic.getReminderText(reminder);
-    callSendAPI(psid, text);
+    callSendAPI(psid, text, 'COMMUNITY_ALERT');
   },
 
   /*

@@ -10,7 +10,9 @@ const DATABASE_URL = process.env.DATABASE_URL ||
 exec(`DATABASE_URL=${ DATABASE_URL } node_modules/db-migrate/bin/db-migrate up`, (err, stdout, stderr) => {
   if (err) {
     logger.error("Migrations script returned with error!");
-    return;
+    logger.error(err);
+    logger.error(`stderr: ${stderr}`);
+    process.exit(1);
   }
   console.log(`stdout: ${stdout}`);
   console.log(`stderr: ${stderr}`);

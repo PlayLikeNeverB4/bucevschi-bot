@@ -5,7 +5,8 @@ const baseMessageHandler = require('./base_message_handler');
 class greetingHandler extends baseMessageHandler {
   static meetsCondition(receivedText) {
     receivedText = receivedText.toLowerCase();
-    return receivedText.includes('salut');
+    const index = receivedText.indexOf('salut');
+    return index !== -1 && index < 10;
   }
 
   static run() {

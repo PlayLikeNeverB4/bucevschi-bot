@@ -4,12 +4,14 @@ const _ = require('lodash'),
       moment = require('moment'),
       codeforcesAPI = require('./apis/codeforces_api'),
       atcoderAPI = require('./apis/atcoder_api'),
-      csacademyAPI = require('./apis/csacademy_api');
+      csacademyAPI = require('./apis/csacademy_api'),
+      manualContestAPI = require('./apis/manual_contest_api');
 
 const apis = [
   codeforcesAPI,
   atcoderAPI,
   csacademyAPI,
+  manualContestAPI,
 ];
 
 const fetchContestsFromAllAPIs = () => {

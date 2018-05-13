@@ -7,8 +7,25 @@ const _ = require('lodash'),
 
 const buildUpcomingContestMessage = (contest) => {
   const timeString = moment(contest.startTimeMs).fromNow(true);
-  const sourcePrettyName = contestsAPI.SOURCES_INFO[contest.source].prettyName;
-  return `[${ timeString }] [${ sourcePrettyName }] ${ contest.name }`;
+  const sourceInfo = contestsAPI.SOURCES_INFO[contest.source];
+
+  let sourceText = '';
+  let contestURL = '';
+  if (sourceInfo && sourceInfo.prettyName) {
+    const sourcePrettyName = sourceInfo.prettyName;
+    sourceText = `[${ sourcePrettyName }] `;
+  } else {
+    // Manual contest
+    if (contest.sourceName) {
+      const sourcePrettyName = contest.sourceName;
+      sourceText = `[${ sourcePrettyName }] `;
+    }
+    if (contest.url) {
+      contestURL = contest.url;
+    }
+  }
+
+  return `[${ timeString }] ${ sourceText }${ contest.name } ${ contestURL }`;
 };
 
 const buildUpcomingContestsMessage = (contests) => {
@@ -21,12 +38,14 @@ const buildUpcomingContestsMessage = (contests) => {
     });
 
     _.forOwn(contestsAPI.SOURCES_INFO, (sourceInfo, sourceId) => {
-      const anyContestWithSource = _.some(
-                                    contests,
-                                    (contest) => contest.source === sourceId
-                                  );
-      if (anyContestWithSource) {
-        text += `${ sourceInfo.prettyName }: ${ sourceInfo.contestsURL }\n`;
+      if (sourceInfo.prettyName && sourceInfo.contestsURL) {
+        const anyContestWithSource = _.some(
+                                      contests,
+                                      (contest) => contest.source === sourceId
+                                    );
+        if (anyContestWithSource) {
+          text += `${ sourceInfo.prettyName }: ${ sourceInfo.contestsURL }\n`;
+        }
       }
     });
   } else {

@@ -48,11 +48,18 @@ const botLogic = {
     const source = reminder.contestSource;
     const sourceInfo = contestsAPI.SOURCES_INFO[source];
     const sourceURL = reminder.contestURL || sourceInfo.contestsURL;
-    const sourcePrettyName = sourceInfo.prettyName;
 
-    return `Concursul ${ reminder.contestName } de pe ` +
-           `${ sourcePrettyName } va avea loc in aproximativ ` +
-           `${ timeString }. ${ sourceURL }`;
+    let sourceText = '';
+    if (sourceInfo && sourceInfo.prettyName) {
+      const sourcePrettyName = sourceInfo.prettyName;
+      sourceText = `de pe ${ sourcePrettyName } `;
+    } else if (reminder.contestSourceName) {
+      const sourcePrettyName = reminder.contestSourceName;
+      sourceText = `de pe ${ sourcePrettyName } `;
+    }
+
+    return `Concursul ${ reminder.contestName } ${ sourceText }va avea loc ` +
+           `in aproximativ ${ timeString }. ${ sourceURL }`;
   },
 };
 

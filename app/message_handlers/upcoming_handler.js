@@ -7,8 +7,18 @@ const _ = require('lodash'),
 
 const buildUpcomingContestMessage = (contest) => {
   const timeString = moment(contest.startTimeMs).fromNow(true);
-  const sourcePrettyName = contestsAPI.SOURCES_INFO[contest.source].prettyName;
-  return `[${ timeString }] [${ sourcePrettyName }] ${ contest.name }`;
+  const sourceInfo = contestsAPI.SOURCES_INFO[contest.source];
+
+  let sourceText = '';
+  if (sourceInfo && sourceInfo.prettyName) {
+    const sourcePrettyName = sourceInfo.prettyName;
+    sourceText = `[${ sourcePrettyName }] `;
+  } else if (contest.sourceName) {
+    const sourcePrettyName = contest.sourceName;
+    sourceText = `[${ sourcePrettyName }] `;
+  }
+
+  return `[${ timeString }] ${ sourceText }${ contest.name }`;
 };
 
 const buildUpcomingContestsMessage = (contests) => {

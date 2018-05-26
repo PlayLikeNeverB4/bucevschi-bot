@@ -11,7 +11,7 @@ const apis = [
   codeforcesAPI,
   atcoderAPI,
   csacademyAPI,
-  manualContestAPI,
+  // manualContestAPI,
 ];
 
 const fetchContestsFromAllAPIs = () => {

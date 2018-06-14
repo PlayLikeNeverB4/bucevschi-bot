@@ -8,6 +8,10 @@ const _ = require('lodash'),
 const ADMIN_MESSAGE_TOKEN = process.env.ADMIN_MESSAGE_TOKEN ||
                             config.get('adminMessageToken');
 
+/*
+ * Message format:
+ * SYSMSG <ADMIN_MESSAGE_TOKEN> <MESSAGE>
+ */
 const parseAdminMessage = (receivedText) => {
   const tokens = receivedText.split(' ');
   if (tokens.length < 3) {

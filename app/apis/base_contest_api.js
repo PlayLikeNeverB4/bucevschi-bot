@@ -9,7 +9,7 @@ class baseContestAPI {
     return new Promise((resolve) => {
       try {
         request.get({
-          "uri": this.getAPIUrl(),
+          uri: this.getAPIUrl(),
         }, (error, result) => {
           try {
             if (!error) {

@@ -17,23 +17,23 @@ const PAGE_ID = process.env.PAGE_ID || config.get('pageId');
 const callSendAPI = (senderPSID, response) => {
   // Construct the message body
   let requestBody = {
-    "recipient": {
-      "id": senderPSID,
+    recipient: {
+      id: senderPSID,
     },
-    "message": {
-      "text": response,
+    message: {
+      text: response,
     },
-    "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
+    tag: "NON_PROMOTIONAL_SUBSCRIPTION",
   };
 
   // Send the HTTP request to the Messenger Platform
   request({
-    "uri": "https://graph.facebook.com/v2.6/me/messages",
-    "qs": {
-      "access_token": PAGE_ACCESS_TOKEN,
+    uri: "https://graph.facebook.com/v2.6/me/messages",
+    qs: {
+      access_token: PAGE_ACCESS_TOKEN,
     },
-    "method": "POST",
-    "json": requestBody,
+    method: "POST",
+    json: requestBody,
   }, (err, res, body) => {
     if (!err && !(body && body.error && body.error.message)) {
       logger.info(`Message sent to ${ senderPSID }!`);
@@ -53,12 +53,12 @@ const callSendAPI = (senderPSID, response) => {
  */
 const callPagePostAPI = (text) => {
   request({
-    "uri": `https://graph.facebook.com/${ PAGE_ID }/feed`,
-    "qs": {
-      "message": text,
-      "access_token": PAGE_POST_ACCESS_TOKEN,
+    uri: `https://graph.facebook.com/${ PAGE_ID }/feed`,
+    qs: {
+      message: text,
+      access_token: PAGE_POST_ACCESS_TOKEN,
     },
-    "method": "POST",
+    method: "POST",
   }, (err, res, body) => {
     if (!err) {
       logger.debug(body);

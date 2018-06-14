@@ -14,7 +14,7 @@ const PAGE_ID = process.env.PAGE_ID || config.get('pageId');
 /*
  * Sends message via the Send API.
  */
-const callSendAPI = (senderPSID, response, tag) => {
+const callSendAPI = (senderPSID, response) => {
   // Construct the message body
   let requestBody = {
     "recipient": {
@@ -23,10 +23,8 @@ const callSendAPI = (senderPSID, response, tag) => {
     "message": {
       "text": response,
     },
+    "tag": "NON_PROMOTIONAL_SUBSCRIPTION",
   };
-  if (tag) {
-    requestBody["tag"] = 'COMMUNITY_ALERT';
-  }
 
   // Send the HTTP request to the Messenger Platform
   request({
@@ -130,7 +128,7 @@ const bot = {
    */
   sendContestReminder: (psid, reminder) => {
     const text = botLogic.getReminderText(reminder);
-    callSendAPI(psid, text, 'COMMUNITY_ALERT');
+    callSendAPI(psid, text);
   },
 
   /*

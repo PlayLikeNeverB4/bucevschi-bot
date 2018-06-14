@@ -30,7 +30,7 @@ const filterFutureContests = (contests) => {
   return _.filter(contests, (contest) => {
     return contest.startTimeMs &&
            contest.startTimeMs >= now &&
-           moment(contest.startTimeMs).diff(now, 'months', true) <= 1;
+           moment(contest.startTimeMs).diff(now, 'days', true) <= 7;
   });
 };
 

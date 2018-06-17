@@ -8,14 +8,16 @@ const _ = require('lodash'),
       unsubscribeHandler = require('./message_handlers/unsubscribe_handler'),
       upcomingHandler = require('./message_handlers/upcoming_handler'),
       adminMessageHandler = require('./message_handlers/admin_message_handler'),
-      unknownHandler = require('./message_handlers/unknown_handler');
+      unknownHandler = require('./message_handlers/unknown_handler'),
+      thanksHandler = require('./message_handlers/thanks_handler');
 
 const messageHandlers = [
-  greetingHandler,
+  adminMessageHandler,
+  upcomingHandler,
   subscribeHandler,
   unsubscribeHandler,
-  upcomingHandler,
-  adminMessageHandler,
+  greetingHandler,
+  thanksHandler,
   unknownHandler,
 ];
 

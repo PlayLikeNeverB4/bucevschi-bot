@@ -2,17 +2,24 @@
 
 const _ = require('lodash'),
       moment = require('moment'),
+      config = require('config'),
       codeforcesAPI = require('./apis/codeforces_api'),
       atcoderAPI = require('./apis/atcoder_api'),
       csacademyAPI = require('./apis/csacademy_api'),
       manualContestAPI = require('./apis/manual_contest_api');
 
+const MANUAL_API_ENABLED = process.env.MANUAL_API_ENABLED ||
+                           config.get('manualApiEnabled');
+
 const apis = [
   codeforcesAPI,
   atcoderAPI,
   csacademyAPI,
-  // manualContestAPI,
 ];
+
+if (MANUAL_API_ENABLED == "true") {
+  apis.push(manualContestAPI);
+}
 
 const fetchContestsFromAllAPIs = () => {
   return new Promise((resolve) => {

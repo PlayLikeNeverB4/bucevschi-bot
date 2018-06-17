@@ -18,6 +18,7 @@ class baseContestAPI {
                 let contests = this.getContestsList(response).map((contest) => {
                   return this.getContestMapping(contest);
                 });
+                contests = this.filterContests(contests);
                 contests = _.sortBy(contests, 'startTimeMs');
                 resolve(contests);
               } else {
@@ -56,6 +57,10 @@ class baseContestAPI {
 
   static getContestsList(response) {
     return response;
+  }
+
+  static filterContests(contests) {
+    return contests;
   }
 }
 

@@ -11,6 +11,9 @@ const _ = require('lodash'),
 const MANUAL_API_ENABLED = process.env.MANUAL_API_ENABLED ||
                            config.get('manualApiEnabled');
 
+const UPCOMING_DAYS_LIMIT = process.env.UPCOMING_DAYS_LIMIT ||
+                            config.get('upcomingDaysLimit');
+
 const apis = [
   codeforcesAPI,
   atcoderAPI,
@@ -37,7 +40,7 @@ const filterFutureContests = (contests) => {
   return _.filter(contests, (contest) => {
     return contest.startTimeMs &&
            contest.startTimeMs >= now &&
-           moment(contest.startTimeMs).diff(now, 'days', true) <= 7;
+           moment(contest.startTimeMs).diff(now, 'days', true) <= UPCOMING_DAYS_LIMIT;
   });
 };
 

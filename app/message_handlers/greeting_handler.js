@@ -4,7 +4,10 @@ const basicResponseHandler = require('./basic_response_handler');
 
 class greetingHandler extends basicResponseHandler {
   static getMatchingInputs() {
-    return [ 'salut', 'hello' ];
+    return [
+      'salut',
+      'hello',
+    ];
   }
 
   static getResponse() {

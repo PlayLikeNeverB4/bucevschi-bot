@@ -2,7 +2,6 @@
 
 const { Client, } = require('pg');
 const config = require('config'),
-      _ = require('lodash'),
       logger = require("winston");
 
 let db;

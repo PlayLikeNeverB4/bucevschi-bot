@@ -16,7 +16,7 @@ const PAGE_ID = process.env.PAGE_ID || config.get('pageId');
  */
 const callSendAPI = (senderPSID, response) => {
   // Construct the message body
-  let requestBody = {
+  const requestBody = {
     recipient: {
       id: senderPSID,
     },

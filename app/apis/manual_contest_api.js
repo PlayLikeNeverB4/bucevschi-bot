@@ -20,7 +20,8 @@ class manualContestAPI extends baseContestAPI {
   }
 }
 
-manualContestAPI.API_URL = 'https://contest-parser.herokuapp.com/contests/other';
+const API_URL = 'https://contest-parser.herokuapp.com/contests/other';
+manualContestAPI.API_URL = API_URL;
 manualContestAPI.SOURCE_ID = 'OTHER';
 
 module.exports = manualContestAPI;

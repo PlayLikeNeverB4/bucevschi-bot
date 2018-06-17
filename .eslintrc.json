@@ -56,7 +56,7 @@
     "guard-for-in": "error",
     "arrow-parens": "error",
     "arrow-spacing": "error",
-    "camelcase": "error",
+    "camelcase": [ "error", { "properties": "never" } ],
     "curly": [
       "error",
       "all"

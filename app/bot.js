@@ -43,7 +43,7 @@ const callSendAPI = (senderPSID, response) => {
       if (body && body.error && body.error.message) {
         err2 = body.error.message;
       }
-      logger.error(`Unable to send message:\n${ err }\n${ err2 }`);
+      logger.error(`Unable to send message:\n${ err }\n${ err2 }\nUser ID: ${ senderPSID }`);
     }
   });
 };

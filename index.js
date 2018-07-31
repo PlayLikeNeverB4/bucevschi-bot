@@ -1,5 +1,7 @@
 'use strict';
 
+const logger = require("winston")
+
 if (process.env.NODE_ENV === 'production') {
   logger.info('Setting up New Relic.');
   require('newrelic');
@@ -12,7 +14,6 @@ const express = require('express'),
       path = require('path');
 
 const moment = require('moment'),
-      logger = require("winston"),
       dbUtils = require('./app/db_utils'),
       bot = require('./app/bot'),
       contestsChecker = require('./app/contests_checker');

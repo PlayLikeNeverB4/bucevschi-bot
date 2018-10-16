@@ -1,1 +1,3 @@
 ssh -R ojrfhdkqxxtedgwhvxssabnjfsfxztbxtgfgxdqaqghbjbtwje.serveo.net:80:localhost:1337 serveo.net
+
+# lt --p 1337 -s ojrfhdkqxxtedgwhvxssabnjfsfxztbxtgfgxdqaqghbjbtwje

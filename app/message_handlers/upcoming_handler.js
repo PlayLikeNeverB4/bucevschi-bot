@@ -60,7 +60,8 @@ class upcomingHandler extends baseMessageHandler {
     receivedText = receivedText.toLowerCase();
     return receivedText.includes('next') ||
            receivedText.includes('upcoming') ||
-           receivedText.includes('urmatoare');
+           receivedText.includes('urmatoare') ||
+           receivedText.includes('continuare');
   }
 
   static run() {

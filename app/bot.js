@@ -23,12 +23,12 @@ const callSendAPI = (senderPSID, response) => {
     message: {
       text: response,
     },
-    tag: "NON_PROMOTIONAL_SUBSCRIPTION",
+    tag: "CONFIRMED_EVENT_UPDATE",
   };
 
   // Send the HTTP request to the Messenger Platform
   request({
-    uri: "https://graph.facebook.com/v3.0/me/messages",
+    uri: "https://graph.facebook.com/v7.0/me/messages",
     qs: {
       access_token: PAGE_ACCESS_TOKEN,
     },

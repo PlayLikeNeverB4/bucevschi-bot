@@ -10,7 +10,7 @@ if (process.env.DATABASE_URL) {
   // production
   db = new Client({
     connectionString: process.env.DATABASE_URL,
-    ssl: true,
+    ssl: { rejectUnauthorized: false },
   });
 } else {
   // local

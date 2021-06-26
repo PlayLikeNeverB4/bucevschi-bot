@@ -1,6 +1,6 @@
 'use strict';
 
-const { Client, } = require('pg');
+const { Client } = require('pg');
 const config = require('config'),
       logger = require("winston");
 

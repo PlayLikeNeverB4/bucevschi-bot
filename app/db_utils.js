@@ -6,6 +6,7 @@ const config = require('config'),
 
 let db;
 
+logger.info('Connecting to the database');
 if (process.env.DATABASE_URL) {
   // production
   db = new Client({

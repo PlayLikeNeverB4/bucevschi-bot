@@ -1,22 +1,7 @@
 'use strict';
 
-const logger = require("winston")
-
-if (process.env.NODE_ENV === 'production' && process.env.NEW_RELIC_LICENSE_KEY) {
-  logger.info('Setting up New Relic.');
-  require('newrelic');
-}
-
-const express = require('express'),
-      bodyParser = require('body-parser'),
-      config = require('config'),
-      app = express().use(bodyParser.json()),
-      path = require('path');
-
-const moment = require('moment'),
-      dbUtils = require('./app/db_utils'),
-      bot = require('./app/bot'),
-      contestsChecker = require('./app/contests_checker');
+const logger = require("winston"),
+      config = require('config');
 
 // Logging levels: error, warn, info, verbose, debug, silly
 const LOGGER_LEVEL = process.env.LOGGER_LEVEL || config.get('loggerLevel');
@@ -26,8 +11,25 @@ logger.add(logger.transports.Console, {
   "level": LOGGER_LEVEL,
 });
 
+if (process.env.NODE_ENV === 'production' && process.env.NEW_RELIC_LICENSE_KEY) {
+  logger.info('Setting up New Relic.');
+  require('newrelic');
+}
+
+const express = require('express'),
+      bodyParser = require('body-parser'),
+      app = express().use(bodyParser.json()),
+      path = require('path');
+
+const moment = require('moment'),
+      dbUtils = require('./app/db_utils'),
+      bot = require('./app/bot'),
+      contestsChecker = require('./app/contests_checker');
+
 moment.locale('ro');
 moment.tz.setDefault('UTC');
+
+logger.info('Initializing app');
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => logger.info('Webhook is listening...'));

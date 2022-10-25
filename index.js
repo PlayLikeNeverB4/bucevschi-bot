@@ -2,7 +2,7 @@
 
 const logger = require("winston")
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && process.env.NEW_RELIC_LICENSE_KEY) {
   logger.info('Setting up New Relic.');
   require('newrelic');
 }

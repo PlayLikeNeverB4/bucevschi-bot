@@ -11,6 +11,8 @@ logger.add(logger.transports.Console, {
   "level": LOGGER_LEVEL,
 });
 
+logger.info('Initializing app');
+
 if (process.env.NODE_ENV === 'production' && process.env.NEW_RELIC_LICENSE_KEY) {
   logger.info('Setting up New Relic.');
   require('newrelic');
@@ -28,8 +30,6 @@ const moment = require('moment'),
 
 moment.locale('ro');
 moment.tz.setDefault('UTC');
-
-logger.info('Initializing app');
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => logger.info('Webhook is listening...'));

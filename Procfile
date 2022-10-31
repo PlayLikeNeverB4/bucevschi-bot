@@ -1,1 +1,1 @@
-release: node scripts/run_migrations.js
+web: npm start
